@@ -18,6 +18,10 @@ void main(void) {
 
   //Pointer variable that contains the address of an ordinary variable
   //&gives the address, * means pointers followed by identifier *identifier
+
+  //so p is used for address assigning while *p is used for value overwritting
+
+  
   int *pointintvar = &ordintvar;
   //Now the address that pointintvar points to has the value 20, which means so does ordintvar
   *pointintvar = 20;
