@@ -92,3 +92,5 @@ void loss2(int arr[2][3]) {
 void loss3(int (*arr)[3]) {
 
 }
+
+
