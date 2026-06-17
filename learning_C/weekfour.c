@@ -13,7 +13,7 @@ int main() {
   char greetings[] = "hello";
   long double long_num = 7L;
   double double_num = 7.2;
-  unsigned int unsignednumber = 8;
+  unsigned int unsignednumber = 8U;
   #define N 5
 
   printf("%s i = %d and f = %f!\n", s, i, f);
