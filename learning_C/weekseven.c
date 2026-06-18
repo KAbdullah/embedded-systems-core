@@ -107,5 +107,10 @@ int main(int argc, char *argv[]) {
 
   printf("%d\n", HDR);
 
-  
+  //In C if you want to link multiple files together, NOTE: ONLY ONE file can have the MAIN function
+  //You use the -c flag to compile into machine code (compiling to assembly is done before turning it into machine code) 
+  //but STOP before linking, it creates .o files
+  //Then you can gcc file1.o file2.0 -o (flag for renaming) final
+  //Then you can run the final file like so ./final
+
 }
