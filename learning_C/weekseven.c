@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <math.h>
 
 //Passing 2D array as a pointer, you MUST type cast it to a singular flat array
 //Also, the parameter list is basically accepting a pointer, NOTE: arr size information is decayed.
 void printTest(int *arr, int row, int column) {
 
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < column; j++) {
+  for (int i = 0; i < row-2; i++) {
+    for (int j = 0; j < column-2; j++) {
       //Works because i will be zero for first row so 0*row = 0
       printf("%d\n", *((arr + i*row) + j));
     }
@@ -29,7 +30,7 @@ int calculate(int (*operation)(int, int), int x, int y) {
 }
 
 
-int main(void) {
+int main(int argc, char *argv[]) {
   int arr[3][3] = {{1,2,3}, {4,5,6}, {7,8,9}};
   //Passing 2D array as a pointer, you MUST type cast it to a singular flat array
   printf("%zu, %zu, %zu\n", sizeof(arr), sizeof(arr) / sizeof(arr[0]), sizeof(arr[0]) / sizeof(arr[0][0]));
@@ -51,4 +52,60 @@ int main(void) {
   int (*addpt)(int, int) = add;
 
   printf("The answer for this is: %d\n", addpt(100, 256));
+
+
+  //the Seed number in srand directly affects what sequence of numbers show up
+  //If srand is the same across re-runs, then the same random numbers will keep showing up
+  srand(1);
+
+  //Random numbers
+  for (int i = 0; i < 2; i++) {
+    
+    float j = rand();
+    printf("Random number: %lf\n", j);
+  }
+
+  //Command line arguments that the main() function gets called with
+  printf("Number of command line arguements: %d\n", argc);
+  printf("The command line arguments are: ");
+  for (int i = 0; i < argc; i++) {
+    printf("%s\n", argv[i]);
+  }
+
+  //Preprocessor - declaration
+  #define ON 0
+  //function-macro
+  #define power(x) (x * x)
+  //file path/name macros
+  #define __FILEPATH1__ "/etc/config.conf"
+  #define __FILE1__ "config.conf"
+
+  int yellow = power(4);
+
+  printf("%d\n", yellow);
+
+  //Preprocessor - conditional inclusion
+  // #defined() is a preprocessor operator
+  #if !defined(HDR)
+    #define HDR 99
+
+  #elif defined(HDR)
+    #define HDR 0
+
+  #endif
+
+  printf("%d\n", HDR);
+
+  #if !defined(HDR)
+    #define HDR 99
+
+  #elif defined(HDR)
+    #undef HDR
+    #define HDR 0
+
+  #endif
+
+  printf("%d\n", HDR);
+
+  
 }
