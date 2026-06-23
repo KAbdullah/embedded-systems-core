@@ -49,7 +49,9 @@ int main(int argc, char *argv[]) {
   printf("This is the answer: %d\n", ans1);
 
   //Pointer referencing a function
-  int (*addpt)(int, int) = add;
+  int (*addpt)(int, int);
+  
+  addpt = add;
 
   printf("The answer for this is: %d\n", addpt(100, 256));
 
@@ -112,5 +114,43 @@ int main(int argc, char *argv[]) {
   //but STOP before linking, it creates .o files
   //Then you can gcc file1.o file2.0 -o (flag for renaming) final
   //Then you can run the final file like so ./final
+
+
+  //STREAMS
+  //streams are basically any source of input or destination for output
+  //This is how you declare streams aka File pointers more accurately managed by file pointers
+  FILE *f1, *f2;
+  //Three streams aka file pointers that come by default, they are:
+  stdin; stdout; stderr;
+
+  //File descriptors are basically 
+  // A File* wraps around a file descriptor and it only becomes in use once we fopen() or open(), we would interact with them directly in systems
+  //programming, but because we have OS, we get functions like read() and write() right out of the bag.
+
+
+  //Now let's get into functions for file reading and writing
+
+  char firstChar, secondChar, thirdChar;
+
+  //READING DATA
+
+  /* printf("Ask me the three chars: \n");
+  scanf("%c %c %c", &firstChar, &secondChar, &thirdChar);
+  printf("The characters are: %c %c %c \n", firstChar, secondChar, thirdChar); */ 
+
+  char name[50];
+  printf("Enter your name: ");
+  //I can swap out stdin for a FILE *pointer
+  //First argument is the buffer, second is the maximum size to read and third is the file discriptor to map to
+  fgets(name, sizeof(name), stdin);
+
+  //Only takes on character, note: getchar() defaults to argument stdin if nothing is passed
+  //Additionally, stdin can be replaced with FILE *pointer 
+  char choice;
+  choice = getc(stdin);
+  printf("%c\n", choice);
+
+  //OUTPUTTING DATA
+  
 
 }

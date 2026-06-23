@@ -5,8 +5,11 @@ TARGET = program
 OBJS = weekfive.o weeksix.o weekseven.o
 
 
-# .PHONY tells makefile that all and clean are recipes not actual files
+# .PHONY tells makefile that all and clean are recipes not actual rules
 .PHONY: all clean
+
+#target: dependecies                <- This holistically is a rule
+#	recipe 														<- This holistically is a recipe
 
 all: $(TARGET)
 
