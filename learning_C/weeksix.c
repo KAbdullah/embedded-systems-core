@@ -57,7 +57,14 @@ void main(void) {
   //Array of pointers
   //This is basically an array of pointers that points to an element
   //so words[0] is a pointer, pointing to apple and vice versa
+  //Simply put, its basically an array of addresses.
   char *words[] ={"apple", "cherry", "orange"};
+  // //This is not allowed because it's not an array that holds addresses
+  // int *numbers[] = {1, 2, 3}
+  int q = 3; int w = 4; int e = 5;
+  //The only reaon char is allowed without & is because when you write "apple"
+  //the computer automatically get's the address of the first character
+  int *numbers[] = {&q, &w, &e};
   printf("%s\n", words[1]);
 
   char *words2[][3] ={{"apple", "cherry", "orange"}, {"Jello", "Jam", "Marmalade"}};
