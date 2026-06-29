@@ -123,6 +123,32 @@ double calculate_median(int *arr, int n) {
 }
 
 int calculate_mode(int *arr, int n) {
-  int result = 0;
+  int duplicate[n];
 
+  for(int i = 0; i < n; i++) {
+    duplicate[i] = *(arr+i);
+  }
+
+  qsort(duplicate, n, sizeof(int), comp);
+
+  int currLen = 1;
+  int maxLen = 0;
+  int modeNum = duplicate[0];
+
+  for(int i = 1; i < n; i++) {
+    if (duplicate[i - 1] == duplicate[i]) {
+      currLen++;
+    } else {
+      currLen = 1;
+    }
+
+    if (currLen > maxLen) {
+      maxLen = currLen;
+      modeNum = duplicate[i];
+    }
+
+  }
+
+  return modeNum;
+  
 }
