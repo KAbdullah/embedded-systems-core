@@ -123,6 +123,7 @@ int main() {
   //found in the <fcntl.h> file
   //This opened a file called file.txt with read only, has third arguement for persmission
   //This || represents bitwise OR and this | represents logical OR
+  //Added permission for reading, writing and executing for user, group and other using <sys/stat.h> library
   mode_t file_mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
   open("crazyfile.txt", O_RDONLY | O_CREAT, file_mode);
 
@@ -149,5 +150,90 @@ int main() {
   printf("The random number is: %d\n", c);
 
   fclose(ranNum);
+
+  //------------------------------------------------------------------------------------------------------------------
+  //Memory and Struct
+
+  //The reason we have pointers become a data type, is due to referencing like pt+1, so the pointer knows how mcuh to jump
+  //and when you want to read, it knows how many bytes to read at once. 
+
+  //malloc()
+
+  int *intPointer;
+
+  intPointer = (int *) malloc(sizeof(int));
+
+  double *doublePointer;
+
+  doublePointer = (double *) malloc(sizeof(double));
+
+  *intPointer = 5;
+  
+  *doublePointer = 6.66;
+
+  printf("The malloc pointers hold the values: %d and %lf\n", *intPointer, *doublePointer);
+
+  //free()
+  free(intPointer);
+  free(doublePointer);
+
+  //Removed the memory that they referenced
+  printf("The malloc pointers NOW hold the values: %d and %lf\n", *intPointer, *doublePointer);
+
+  
+  //Implementing fucntions using malloc
+
+  int *allocateMemoryArray(int num) {
+    int *ptr = (int *) malloc(num * sizeof(int));
+
+    return ptr;
+  }
+
+  int *array;
+  int num;
+
+  printf("How many grades would you like to input: ");
+
+  scanf("%d", &num);
+
+  array = allocateMemoryArray(num);
+
+  printf("Please enter %d grades: ", num);
+
+  for (int i = 0; i < num; i++) {
+    scanf("%d", array+i);
+  }
+
+  printf("The grades you inputted are:" );
+  for (int i = 0; i < num; i++) {
+    printf("%d ", *(array+i));
+  }
+  printf("\n");
+
+  free(array);
+
+  //calloc()
+  //Initializes the allocated memory to zero unlike malloc()
+  int *callocPt = calloc(10, sizeof(int)); // allocate 10 elements the size of int, so 40 bytes total
+
+  //realloc()
+  //this function also automatically copies your data in your previous memory to the new one, if it moved, otherwise
+  //it just grows the memory size and the callocPt sill points to the same place, because the memory didn't move, just grew
+  int *temp = realloc(callocPt, 20 * sizeof(int));
+
+  if (temp == NULL) {
+    printf("Reallocation failed.");
+    free(callocPt);
+    return 1;
+  }
+
+  callocPt = temp;
+
+  //Only need to free callocPt, because they point to the same address
+  //Also free just tells the OS this memory can now be used again, even though the original data is there,
+  //you must treat it as corrupted data, because it can be overwritten with the next malloc(), calloc(), etc..
+  free(callocPt);
+
+
 
 }
