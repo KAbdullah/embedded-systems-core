@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <stdint.h>
+
+typedef struct {
+  double width;
+  double height;
+} Shape;
+
+
+double getArea(Shape shape);
+
+Shape make_dimension(double w, double h);
+
+double get_this_area(Shape *shape);
 
 
 int main() {
@@ -234,6 +247,160 @@ int main() {
   //you must treat it as corrupted data, because it can be overwritten with the next malloc(), calloc(), etc..
   free(callocPt);
 
+  //always initlize pointers to NULL if you don't plan to initlize them rn because then ptr==NULL works
+  //but not inializing it to NULL, leaves it to point to grabage memory which fails the ptr==NULL check
 
+  int *exPtr = NULL;
 
+  if (exPtr == NULL) {
+    printf("Failed predictably\n");
+  }
+
+  
+
+  //Structures
+  //typedef tells the compiler that the variable Student isn't just a variable it's a typedef, meaning a type defintion
+  //a.k.a it's a type
+  typedef struct {
+    char firstname[30];
+    char lastname[30];
+    int age;
+    double grade;
+
+  } Student, cpyStudent;
+
+  Student aleena = {"Aleena", "Khatib", 22, 7.56};
+
+  Student *studPtr = &aleena;
+
+  printf("The pointer values are: %s %s %d %.2lf\n", studPtr->firstname, studPtr->lastname, studPtr->age, studPtr->grade);
+
+  cpyStudent cpyAleena = aleena;
+
+  printf("The copied pointer values are: %s %s %d %.2lf\n", cpyAleena.firstname, cpyAleena.lastname, cpyAleena.age, cpyAleena.grade);  
+
+  //This is an NOT an ANONYMOUS struct (Sunila is wrong, it's variable type), basically it can't be reused again, but because I wan't to use it just once, 
+  //I give it the variable Triangle
+  //So, of this struct type, only Triangle ever exists in memory. I can also create a pointer triP of the variable type, and it can point to
+  //only Triangle, because it's the only one of it's type, if I did a variable Square, then it could point to that too.
+  struct {
+    double height;
+    double base;
+  } Triangle, Square, *triP = &Triangle;
+
+  Shape square;
+  square.height = 4;
+  square.width = 4;
+
+  //Pass by value to functions
+  //struct defined at the top of the file, and function at the bottom  
+
+  double shapeAnswer = getArea(square);
+
+  printf("The area of the Square is: %.2lf\n", shapeAnswer);
+
+  //Return struct from function
+
+  Shape rectangle = make_dimension(4, 8);
+
+  printf("My new rectangle dimensions are: %.2lf, %.2lf\n", rectangle.width, rectangle.height);
+
+  //Pass by reference
+  //This is feasable for large strcutures with a lot of information, also when you pass pointers you get attribute values as such
+  //(*pt).width or much better is pt -> width
+
+  double shapeArea = get_this_area(&square);
+  printf("The area of the Square using pass by reference is: %.2lf\n", shapeArea);
+
+  //Array of structures
+  typedef struct {
+    char firstName[30];
+    char lastName[30];
+    int age;
+    char hobby[100];
+  } Person;
+
+  //This is not a 2D array so the 3 here doesn't signify the number of columns, which would otherwise be a program crash
+  //it's just an array of structures
+  Person pplArray[3] = {
+    {"Abdullah", "Khatib", 39, "Play basketball"},
+    {"Aleena", "Khatib", 40, "Loves to game"},
+    {"Bolo", "Dolo", 101, "Loves to breathe"}
+  };
+
+  //Nested structures
+
+  typedef struct {
+    int whatever;
+    float bruh;
+  } Inner;
+
+  typedef struct {
+    Inner random1;
+    Inner random2;
+  } Outer;
+
+  //Unions
+  //For unions, only one attribute can be active at a time, and setting one attribute re-writes all the other ones
+  //making them inactive, because they share the memory of the biggest type set in the union
+
+  //Enum
+  //Basically aliases for number 0... to however many you define
+  //You can explicity set them like TYPE_FLOAT = 3, but the next enumerator will be 4, +1 of the previous
+  //Enums get 4 bytes
+  typedef enum {TYPE_INT, TYPE_FLOAT, TYPE_CHAR} DataType; 
+
+  typedef struct {
+    //Reason we have this over here is, because when we create the struct Variant, we want the space reserved for the union to know,
+    //what type of data is stored in the variable data, if it's int, float or char. When we create a Variable variable, we will explicitly
+    //set type
+    DataType type;
+    //Names union variable
+    union {
+      int i_val;
+      float f_val;
+      char c_val;
+      
+    } data;
+  } Variant;
+
+  //This basically overalys the struct data underneath the attribute value of union type
+  typedef union {
+    uint32_t value;
+    struct {
+      uint8_t firstByte;
+      uint8_t secondByte;
+      uint8_t thirdByte;
+      uint8_t fourthByte;
+    } data;
+  } Memory;
+
+  //Little-Endian: Chooses to place the lower part of the memory first
+  //Big-Endian: does the opposite
+
+  //The volatile keyword is very important in embedded, because it help avoid the compiler optimization trap
+  //baiscally tells the compiler this address changes its value often, so keep checking it, instead of optimizing, and
+  //not checking this address often
+  volatile keepChanging;
+  
+}
+
+double getArea(Shape shape) {
+  return shape.height * shape.width;
+}
+
+Shape make_dimension(double w, double h) {
+  Shape returned;
+
+  //If you do this: returned = {w, h}, make sure you know the order defined in the actual structure, because that's
+  //how the mapping happens
+
+  returned.width = w;
+  returned.height = h;
+
+  return returned;
+}
+
+double get_this_area(Shape *shape) {
+  return shape->width * shape->height;
 }
