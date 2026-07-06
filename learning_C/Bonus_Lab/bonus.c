@@ -19,20 +19,18 @@ typedef enum {
   EXIT
 } Options;
 
-Employee* addEmployee();
+Employee * addEmployee();
 
 
 int main() {
-
-  printf("Size of this datatype is %zu", sizeof(float));
-
   int userOption;
-  Employee *ptr[100];
+  Employee *ptr = (Employee *) malloc(1 * sizeof(Employee));
   int nextEmployeeIndex = 0;
+  int currCapacity = 1;
 
   //Best if you want to run the loop right from the jump and don't have a condition right at the start, but after
   do {
-    printf("Employee Performance Management System\n");
+    printf("\n===Employee Performance Management System===\n");
     printf("1. Add Employee\n");
     printf("2. Update Employee\n");
     printf("3. Display All Employees\n");
@@ -40,24 +38,50 @@ int main() {
     printf("5. Exit\n");
     printf("Enter your choice: ");
 
-    scanf("%d", &userOption);
-
-    if (userOption == ADD) {
-      ptr[nextEmployeeIndex] = addEmployee();
-      nextEmployeeIndex++;
-    } else {
-      return 1;
+    if (scanf("%d", &userOption) == 0) {
+      printf("Invalid input!\n");
+      //exits the most inner loop
+      break;
     }
 
-    printf("The new added record is: %s, %d, %.2f, %s, %d, %.2f\n\n", ptr[nextEmployeeIndex - 1]->name, ptr[nextEmployeeIndex - 1]->employee_id, 
-    ptr[nextEmployeeIndex - 1]->salary, ptr[nextEmployeeIndex - 1]->department, ptr[nextEmployeeIndex - 1]->years_of_experience, 
-    ptr[nextEmployeeIndex - 1]->performance_score
-    );
+    if (userOption == ADD) {
+      if (nextEmployeeIndex >= currCapacity) {
+        currCapacity = currCapacity * 2;
+        Employee *temp = realloc(ptr, currCapacity * sizeof(Employee));
 
+        if (temp == NULL) {
+          printf("We couldn't increase the wise of the Database.");
+          //Free the original memory before exiting.
+          free(ptr);
+          return 1;
+        }
+        //ptr sill holds the memory address of the old heap memory area, so we change it to reference the new large one
+        ptr = temp;
+      }
+
+      
+      //I want to free the memory area created in addEmployee here, because addEmployee can't free it before or after returning the pointer
+      Employee *tempEmployee = addEmployee();
+      
+      //When you index into a pointer, you also dereference, so it's no longer a pointer,
+      //Therefore addEmployee can't return a pointer
+      ptr[nextEmployeeIndex] = *tempEmployee;
+
+      //Once it's added to our ptr heap array above, we can free it here.
+      free(tempEmployee);
+
+      printf("\n\n %s, %d, %f, %s, %d, %f \n\n", ptr[nextEmployeeIndex].name, ptr[nextEmployeeIndex].employee_id, ptr[nextEmployeeIndex].salary, 
+      ptr[nextEmployeeIndex].department, ptr[nextEmployeeIndex].years_of_experience, ptr[nextEmployeeIndex].performance_score);
+
+      nextEmployeeIndex++;
+    } else if (userOption == EXIT) {
+      printf("Exiting...");
+    }
 
   } while (userOption != EXIT);
 
-
+  free(ptr);
+  return 0;
 }
 
 Employee * addEmployee() {
@@ -73,16 +97,16 @@ Employee * addEmployee() {
   float performanceScore;
 
   printf("Enter name of Employee: ");
-  scanf("%s", &tempChar);
+  scanf("%s", tempChar);
   printf("Enter employee ID: ");
   scanf("%d", &tempEmployeeId);
   printf("Enter salary: ");
   scanf("%f", &tempSalary);
   printf("Enter department: ");
-  scanf("%s", &tempDepartment);
+  scanf("%s", tempDepartment);
   printf("Enter years of experience: ");
   scanf("%d", &yearsOfExperience);
-  performanceScore = ((0.3 * yearsOfExperience) + ((0.7 * tempSalary) / 1000));
+  performanceScore = (0.3 * yearsOfExperience + 0.7 * tempSalary / 1000);
 
   //you can't regularly assign a character array, because it's an address and not longer a value, if it's just one Char, then you can
   //assign via =
@@ -92,5 +116,7 @@ Employee * addEmployee() {
   strcpy(ptr->department, tempDepartment);
   ptr->years_of_experience = yearsOfExperience;
   ptr->performance_score = performanceScore;
+
+  return ptr;
 
 }
