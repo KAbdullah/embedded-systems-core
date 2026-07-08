@@ -21,6 +21,8 @@ typedef enum {
 
 Employee * addEmployee();
 
+void updateEmployee(Employee * employee, int numberofempoyees);
+
 
 int main() {
   int userOption;
@@ -74,6 +76,17 @@ int main() {
       ptr[nextEmployeeIndex].department, ptr[nextEmployeeIndex].years_of_experience, ptr[nextEmployeeIndex].performance_score);
 
       nextEmployeeIndex++;
+    } else if (userOption == UPDATE) {
+        updateEmployee(ptr, currCapacity);
+
+        for (int i = 0; i < currCapacity; i++) {
+          Employee tempPtr = ptr[i];
+          printf("Employee Name: %s", tempPtr.name);
+          printf("Employee Id: %d", tempPtr.employee_id);
+          printf("Employee Salary: %f", tempPtr.salary);
+          printf("Employee department: %s", tempPtr.department);
+        }
+
     } else if (userOption == EXIT) {
       printf("Exiting...");
     }
@@ -119,4 +132,33 @@ Employee * addEmployee() {
 
   return ptr;
 
+}
+
+void updateEmployee(Employee * employees, int currCapacity) {
+  int enteredID;
+  float newSalary;
+  char newDepartment[50];
+
+  Employee ptr;
+  
+  printf("Enter Employee ID to update: ");
+  scanf("%d", &enteredID);
+  printf("\n");
+
+  printf("Enter new salary: ");
+  scanf("%f", &newSalary);
+  printf("\n");
+
+  printf("Enter new department: ");
+  scanf("%s", newDepartment);
+  printf("\n");
+
+  for (int i = 0; i < currCapacity; i++) {
+    ptr = employees[i];
+
+    if (ptr.employee_id == enteredID) {
+      ptr.salary = newSalary;
+      strcmp(ptr.department, newDepartment);
+    }
+  }  
 }
