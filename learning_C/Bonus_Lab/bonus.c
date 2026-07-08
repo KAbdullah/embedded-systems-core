@@ -81,10 +81,13 @@ int main() {
 
         for (int i = 0; i < currCapacity; i++) {
           Employee tempPtr = ptr[i];
+          printf("\n");
           printf("Employee Name: %s", tempPtr.name);
           printf("Employee Id: %d", tempPtr.employee_id);
-          printf("Employee Salary: %f", tempPtr.salary);
+          printf("Employee Salary: %.2f", tempPtr.salary);
           printf("Employee department: %s", tempPtr.department);
+          printf("Employee performance score: %.2f", tempPtr.performance_score);
+          printf("\n");
         }
 
     } else if (userOption == EXIT) {
@@ -108,6 +111,12 @@ Employee * addEmployee() {
   char tempDepartment[50];
   int yearsOfExperience;
   float performanceScore;
+
+  //For all the scanf() here, I don't need to do scanf(" %s") - note the space -, because for the s character there is already a built in
+  //loop that tells it to skip all whitespaces which include new-line characters (\n). However, for %c you must put a space since that captures
+  //everything. Also, professionals recommend using fgets instead, because it doesn't ignore spaces at all,
+  //useful when you have a first name like Mark Hue. Additionally you also then clean the input by, doing this,
+  //varToStore[strcspn(varToStore, "\n")] = "\0", this replaces the buffer's \n with a null terminator (\0).
 
   printf("Enter name of Employee: ");
   scanf("%s", tempChar);
@@ -139,26 +148,27 @@ void updateEmployee(Employee * employees, int currCapacity) {
   float newSalary;
   char newDepartment[50];
 
-  Employee ptr;
+  Employee *ptr;
   
   printf("Enter Employee ID to update: ");
   scanf("%d", &enteredID);
-  printf("\n");
 
   printf("Enter new salary: ");
   scanf("%f", &newSalary);
-  printf("\n");
 
   printf("Enter new department: ");
   scanf("%s", newDepartment);
+
+  printf("Employee information updated successfully!");
   printf("\n");
 
   for (int i = 0; i < currCapacity; i++) {
-    ptr = employees[i];
+    ptr = &employees[i];
 
-    if (ptr.employee_id == enteredID) {
-      ptr.salary = newSalary;
-      strcmp(ptr.department, newDepartment);
+    if (ptr->employee_id == enteredID) {
+      ptr->salary = newSalary;
+      strcpy(ptr->department, newDepartment);
+      ptr->performance_score = (0.3 * ptr->years_of_experience + 0.7 * newSalary / 1000);
     }
   }  
 }
