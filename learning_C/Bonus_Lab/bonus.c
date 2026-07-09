@@ -27,7 +27,7 @@ void updateEmployee(Employee * employee, int numberofempoyees);
 
 void displayEmployees(Employee *Employees, int numOfEmployees);
 
-Employee * searchEmployeeByName(Employee *employees, int numEmployees);
+void searchEmployeeByName(Employee *employees, int numEmployees);
 
 void sortEmployeesByPerformance(Employee *employees, int numOfEmployees);
 
@@ -105,15 +105,9 @@ int main() {
         displayEmployees(ptr, nextEmployeeIndex);
 
     } else if (userOption == SEARCH) {
-      Employee searchedEmployees[] = searchEmployeeByName(ptr, nextEmployeeIndex);
-
-      int searchedLen = sizeof(searchedEmployees) / sizeof(Employee);
-
-      printf("Size of the searched array is: %d", searchedLen);
-
-      printf("Searched Results: \n");
       
-      
+      searchEmployeeByName(ptr, nextEmployeeIndex);
+      printf("Searched Results: \n");   
 
     } else if (userOption == EXIT) {
       printf("Exiting...");
@@ -236,23 +230,22 @@ void sortEmployeesByPerformance(Employee *employees, int numOfEmployees) {
 
 }
 
-Employee * searchEmployeeByName(Employee *employees, int numEmployees) {
+void searchEmployeeByName(Employee *employees, int numEmployees) {
 
   char name[50];
-  int currPtrIndex = 0;
 
   printf("Enter name to search: ");
   scanf("%s", name);
   
-  Employee *ptr;
-  
   for (int i = 0; i < numEmployees; i++) {
     if (strstr(employees[i].name, name)) {
-      ptr[currPtrIndex] = employees[i];
-      currPtrIndex ++;
+      printf("\n");
+      printf("Employee Name: %s\n", employees[i].name);
+      printf("Employee Id: %d\n", employees[i].employee_id);
+      printf("Employee Salary: %.2f\n", employees[i].salary);
+      printf("Employee department: %s\n", employees[i].department);
+      printf("Employee performance score: %.2f\n", employees[i].performance_score);
     }
   }
-
-  return ptr;
 
 }
