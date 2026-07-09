@@ -21,7 +21,15 @@ typedef enum {
 
 Employee * addEmployee();
 
+int compare(const void *a, const void *b);
+
 void updateEmployee(Employee * employee, int numberofempoyees);
+
+void displayEmployees(Employee *Employees, int numOfEmployees);
+
+Employee * searchEmployeeByName(Employee *employees);
+
+void sortEmployeesByPerformance(Employee *employees, int numOfEmployees);
 
 
 int main() {
@@ -89,6 +97,13 @@ int main() {
           printf("Employee performance score: %.2f", tempPtr.performance_score);
           printf("\n");
         }
+
+    } else if (userOption == DISPLAY) {
+        printf("\nEmployee Records (sorted by Performance Score): \n");
+
+        displayEmployees(ptr, nextEmployeeIndex);
+
+    } else if (userOption == SEARCH) {
 
     } else if (userOption == EXIT) {
       printf("Exiting...");
@@ -171,4 +186,46 @@ void updateEmployee(Employee * employees, int currCapacity) {
       ptr->performance_score = (0.3 * ptr->years_of_experience + 0.7 * newSalary / 1000);
     }
   }  
+}
+
+
+void displayEmployees(Employee *employees, int numOfEmployees) {
+  sortEmployeesByPerformance(employees, numOfEmployees);
+
+  for (int i = 0; i < numOfEmployees; i++) {
+    Employee tempEmployee = employees[i];
+
+    printf("Name: %s\n", tempEmployee.name);
+    printf("Employee ID: %d\n", tempEmployee.employee_id);
+    printf("Salary: %.2f\n", tempEmployee.salary);
+    printf("Department: %s\n", tempEmployee.department);
+    printf("Years of Experience: %d\n", tempEmployee.years_of_experience);
+    printf("Performance Score: %.2f\n", tempEmployee.performance_score);
+    printf("\n");
+  }
+
+}
+
+int compare(const void *a, const void *b) {
+  const Employee* x = (Employee *) a;
+  const Employee* y = (Employee *) b;
+
+  if (x->performance_score > y->performance_score) {
+    return -1;
+  } else if (x->performance_score < y->performance_score) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+void sortEmployeesByPerformance(Employee *employees, int numOfEmployees) {
+  int (*compar)(const void*, const void*) = compare;
+  
+  qsort((void *) employees, numOfEmployees, sizeof(Employee), compar);
+
+}
+
+Employee * searchEmployeeByName(Employee *employees) {
+  
 }
