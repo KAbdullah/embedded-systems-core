@@ -85,17 +85,18 @@ int main() {
 
       nextEmployeeIndex++;
     } else if (userOption == UPDATE) {
-        updateEmployee(ptr, currCapacity);
+      //Pass Employee index instead of currCapacity, because currCapacity doesn't have an Employee stored in that position
+      //meaning doing stuff like .name, .salary, etc. will cause Segmentation faults
+        updateEmployee(ptr, nextEmployeeIndex);
 
         for (int i = 0; i < currCapacity; i++) {
           Employee tempPtr = ptr[i];
           printf("\n");
-          printf("Employee Name: %s", tempPtr.name);
-          printf("Employee Id: %d", tempPtr.employee_id);
-          printf("Employee Salary: %.2f", tempPtr.salary);
-          printf("Employee department: %s", tempPtr.department);
-          printf("Employee performance score: %.2f", tempPtr.performance_score);
-          printf("\n");
+          printf("Employee Name: %s\n", tempPtr.name);
+          printf("Employee Id: %d\n", tempPtr.employee_id);
+          printf("Employee Salary: %.2f\n", tempPtr.salary);
+          printf("Employee department: %s\n", tempPtr.department);
+          printf("Employee performance score: %.2f\n", tempPtr.performance_score);
         }
 
     } else if (userOption == DISPLAY) {
@@ -158,7 +159,7 @@ Employee * addEmployee() {
 
 }
 
-void updateEmployee(Employee * employees, int currCapacity) {
+void updateEmployee(Employee * employees, int numEmployees) {
   int enteredID;
   float newSalary;
   char newDepartment[50];
@@ -177,7 +178,7 @@ void updateEmployee(Employee * employees, int currCapacity) {
   printf("Employee information updated successfully!");
   printf("\n");
 
-  for (int i = 0; i < currCapacity; i++) {
+  for (int i = 0; i < numEmployees; i++) {
     ptr = &employees[i];
 
     if (ptr->employee_id == enteredID) {
