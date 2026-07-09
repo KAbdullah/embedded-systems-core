@@ -27,7 +27,7 @@ void updateEmployee(Employee * employee, int numberofempoyees);
 
 void displayEmployees(Employee *Employees, int numOfEmployees);
 
-Employee * searchEmployeeByName(Employee *employees);
+Employee * searchEmployeeByName(Employee *employees, int numEmployees);
 
 void sortEmployeesByPerformance(Employee *employees, int numOfEmployees);
 
@@ -105,6 +105,15 @@ int main() {
         displayEmployees(ptr, nextEmployeeIndex);
 
     } else if (userOption == SEARCH) {
+      Employee searchedEmployees[] = searchEmployeeByName(ptr, nextEmployeeIndex);
+
+      int searchedLen = sizeof(searchedEmployees) / sizeof(Employee);
+
+      printf("Size of the searched array is: %d", searchedLen);
+
+      printf("Searched Results: \n");
+      
+      
 
     } else if (userOption == EXIT) {
       printf("Exiting...");
@@ -227,6 +236,23 @@ void sortEmployeesByPerformance(Employee *employees, int numOfEmployees) {
 
 }
 
-Employee * searchEmployeeByName(Employee *employees) {
+Employee * searchEmployeeByName(Employee *employees, int numEmployees) {
+
+  char name[50];
+  int currPtrIndex = 0;
+
+  printf("Enter name to search: ");
+  scanf("%s", name);
   
+  Employee *ptr;
+  
+  for (int i = 0; i < numEmployees; i++) {
+    if (strstr(employees[i].name, name)) {
+      ptr[currPtrIndex] = employees[i];
+      currPtrIndex ++;
+    }
+  }
+
+  return ptr;
+
 }
