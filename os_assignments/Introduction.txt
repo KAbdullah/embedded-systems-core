@@ -1,0 +1,222 @@
+Computer Sytem Organization
+---------------------------
+
+Basically the architecture can be broken down into a few simplye things.
+
+You have the CPU, then you have the device controllers each of which have their own device driver's to program them, their buffers aka registers.
+
+Then you have the memory where you can read and write data from and to. Lastly you have a system bus connecting them all.
+
+The memroy controller has it's own driver that basically schronizes access to it's memory for the CPU and the device controller's because
+both of them compete for the resource.
+
+CPU registers
+-------------
+
+It has a memory address register (MAR), which basically stores the memory address for the next read and write.
+
+Memory Buffer Register (MBR) is used to store data that needs was read or needs to be written
+
+I/O Address Register (I/O AR) has the address for the input device that will be read from or written to
+
+I/O Buffer Register (I/O BR) has data that was read from or needs to be written to the I/O Module (basically the device controller's registers)
+
+Memory & I/O Modules
+--------------------
+
+The memory module consists of a set of locations defined by sequential numbered addresses.
+
+Some of the address are instructions while others are Data
+
+The I/O Module is basically buffers that hold data read from or written to external devices
+
+NOTE: Buffers and registers aren't the same thing, registers hold data that's actively being worked on by the CPU, while Buffers
+temporarily store data to offset the speed differences between the CPU and the hardware parts themselves
+
+Instruction cycle
+-----------------
+
+You have the PC (program counter) that stores the address of the next instruction to be fetches
+
+The processor then fetches that information from memory and loads it into the IR (instruction register)
+
+PC is incremented after each fetches
+
+Interrupts
+----------
+
+Basically we can't have the CPU (very fast hardware) always taking a break from it's task to keep asking a hardware if it's done doing something or
+it has something for it - too much time wasting. Instead we let the hardware (very slow compared to the CPU) interrupt the CPU and tell it it's done.
+
+Polling is where the CPU keeps checking if new events ar taking place, basically it's asking the hardware
+
+More advanced interrupting required interrupt controller hardware. This hardware basically must 1. Defer interrupts during critical processing
+2. Have an efficient way to dispatch to the proper interrupt handler 3. Multilevel interrupts going from low to high priority
+
+Also, we have maskable and non-maskable interrupts, because some interrupts require immediate attention while others don't
+
+Two ways to handle interrupts:
+
+1. Disable iterrupts while an interrupt is being handled 
+2. Prioritize interrupts based on mutil-level interrupts, where higher priority interrupts get precedence.
+
+Main memory
+-----------
+
+Main memory is volatile and implemented in semiconductor technology also called DRAM (dynamic random access memory)
+
+You also have ROM, EPROM and EEPROM which are useful for bootstrap programs; these are programs that load when you start the computer,
+they initialize the system, load the kernal and then execute it.
+
+ROM - Read-Only Memory, a type of non-volatile memory where the data is permanently written and can't be erased or modified with normal computer processes
+EPROM - Erasable Programmable Read-only Memory, it's a type of memory that can only be erased via UV light
+EEPROM - Electronically erasable Read-only memory that doesn't need to be removed from the circuit and can be electrically reprogrammed
+
+Secondary Storage - HDD(mechanical), SSD(Electrical), NVM, etc...
+
+
+Caching
+-------
+
+Caching - copying information into faster storage system, main memory can be viewed as cache for secondary storage
+
+The cache (faster storage) is checked, if information is not found there then data is copied to the cache and used
+
+I/O Structure
+-------------
+
+A large portion of the OS is dedicated to handle I/O devices because they are so important. When you have the CPU encounter instruction 
+from I/O it executes that insturction by issuing a command to the appropriate I/O module.
+
+You can't handle I/O operations in two ways:
+
+1. Interrupt-driven I/O: Best when you deal with small bytes of data, because as each data comes in, you issue an interrupt, the CPU itself moves
+the data to RAM and then resumes what it was doing. It becomes to costly when data size is too big. That's when we doesn
+2. Direct Memory Access (DMA): This is when the CPU issues the DMA controller to go to this address to get the I/O data and store it at this address
+in the RAM. So the DMA controller then goes on its own and loads it into RAM without much CPU interference anymore. Basically, you reduce interrupt
+routines from 1 interrupt per byte to 1 per whole block of code
+
+Computer-System architecture
+----------------------------
+
+General-processor: processors that can handle a wide range of tasks and applications
+
+Computer systems can be categorized based on the # of general- processors, there is 3:
+
+- Single-processor systems
+- Multiprocessor systems
+- Clustered systems
+
+Single-processor systems
+------------------------
+
+This is the old days. They also had specialized processors for specific tasks like handling a disk, I/O devices, graphics, etc..
+
+Multiprocessor systems
+----------------------
+
+These are also called parallel systems or tightly-coupled systems. Most systems use these nowadays
+
+Two types of multi-processor systems:
+
+1. Symmetric Multiprocessing (SMP) - most common where each processor performs all tasks
+2. Asymmetric Muliprocessing - each processor handles a specific task
+
+Symmetric Multiprocessing Architecture (SMP)
+--------------------------------------
+
+Each processor has it's own CPU with it's own private Registers along with local and/or private Caches. 
+They share a main memory between the two of them by connecting to the system bus.
+
+N processes can run if there are N CPUS
+
+Multicore Systems Architecture
+------------------------------
+
+Basically you have one processor(aka. chip) with multiple CPU cores.
+Each core has it's own private registers and L1 Cache, but share a local L2 cache with the other cores.
+You can also have L3 and L4 caches too if you have more cores, and then those can be divided up between more cores.
+So example, you have 8 cores, each core has their own L1 cache, two cores share L2 cache, 4 cores share L3 cache and all 8 share L4 cache(Rare),
+mostl you have L3 cache shared between all 8.
+
+Can be more efficient then mutliple CPUs, because on-chip communication is faster then between chips
+
+Also One chip with multiple cores is more power efficient then multiple CPUs with one core 
+
+Dual-core Design (A type of multicore systems architecture)
+-----------------------------------------------------------
+
+Basically two cores, each having their own registers and L1 cache, but sharing a local L2 cache.
+
+BTW, multi cores appear as multiple CPUs to the operating system
+
+Non-Uniform Memory Access Systems (NUMA)
+----------------------------------------
+
+Basically, each CPU or group of CPUS share their own local memory connected by a fast local bus.
+Then those CPUs are all interconnected by a shared system. The drawback, when a CPU must use memory that
+doesn't belong to it/its group, but to another CPU of group fo CPUs; this causes latency and performance penalty
+
+Custered Systems - Don't know why this was included, it's more about networks 
+-----------------------------------------------------------------------------
+
+Each system (computer) also called nodes runs an application or parts of an application, so that if one fails the other one is still running
+and can take over. More efficient. 
+
+Share a storage area caleld Storage-Area Network (SAN).
+
+OS operations
+-------------
+
+After the bootstrap programs executes, it starts running the Kernel which in turn starts system daemons (run outside of user control to run OS
+system functionalities, network requests and hardware management). Daemons run in between user applications and the kernel, but they only talk to
+the kernel to manage background stuff I listed above. 
+
+In Linux, the first program that runs is systemd, which is like the master daemon.
+
+Kernel is interrupt driven, could be a software error, request for OS services (aka system call), or other process problems like infinite loops,
+procecesses modifying each other etc.
+
+Multiprogramming and Multitasking
+---------------------------------
+
+Multiprogramming is trying to maximize utilization of CPU
+Multiprogramming is minimizing reponse time
+
+Virtual memory allows execution of processes not completely in memory.
+BTW, data from memory gets COPIED into cache, that's why memory is important
+
+Dual-mode and Multi-mode operations
+-----------------------------------
+
+The Mode bit is provided by the hardware, this allows the system to distinguish between User code and kernel code to protect the Sytem
+Instuructions usually go from user mode to kernel mode where they are generated by the user, where those actions make systems calls, which are 
+then handed to the kernel that executes it and then returns it back to the user
+
+LINUX Timers (important)
+------------------------
+
+These timers (kept by the physical clock) are used to basically cause interrupts so that the task don't HOG resources, and only take
+up their alloted time.
+
+In linux there is a configuration parameter that sets the number of interrupts that take place per second; it's HZ.
+An HZ of 250 means, 250 interrupts per second, which is about 1 every 4ms. So each task has an allotted time of 4ms to complete.
+
+Another variable called "jiffies" tracks how many interrupts have occured since the system booted.
+
+BTW, multi-thread systems have multiple program counters(PC), one per thread.
+
+Cache Coherence
+---------------
+
+When one cache gets updated with a new value, all subsequent caches must also be updated with the new value, otherwise
+incorrect execution may occur
+
+Basic Definitions
+-----------------
+
+CPU - central processing unit, the hardware that executes the instructions 
+Processor - the physical chip that has the CPU, caches and registers
+Core - The basic computation unit of a CPU
+Multicore - Multiple compuation units on the same CPU
+Multiprocessor - multiple processors
