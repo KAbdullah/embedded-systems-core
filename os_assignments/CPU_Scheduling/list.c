@@ -57,6 +57,8 @@ void delete(struct node **head, Task *task) {
     }
     //Added free(temp) to ensure no memory leak
     if (temp != NULL) {
+        //free the task too, since it was allocated memory and we don't want it floating around if we remove it from the queue 
+        free(temp->task);
         free(temp);
     } 
 }
