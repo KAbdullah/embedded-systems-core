@@ -10,6 +10,6 @@ struct node {
 };
 
 // insert and delete operations.
-void insert(struct node **head, Task *task);
+void insert(struct node **head, struct node **tail, Task *task);
 void delete(struct node **head, Task *task);
 void traverse(struct node *head);
