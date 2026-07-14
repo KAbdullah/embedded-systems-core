@@ -49,7 +49,12 @@ void schedule() {
     avgTurn += currentTime;
 
     totalTasks++;
-    temp = temp->next;
+
+    delete(&temp, tempTask);
+
+    if (temp != NULL) {
+      temp = temp->next;
+    }
   }
 
   printf("\nAverage waiting time = %.2lf\n", avgWait / totalTasks);
