@@ -59,6 +59,8 @@ void delete(struct node **head, Task *task) {
     if (temp != NULL) {
         //free the task too, since it was allocated memory and we don't want it floating around if we remove it from the queue 
         free(task);
+        //if it's temp points to head in the beginning anyways, so if head is the first one removed and we move the head pointer, we can simply 
+        //free temp since it pointed to the old head.
         free(temp);
     } 
 }
