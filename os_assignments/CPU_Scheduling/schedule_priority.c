@@ -10,7 +10,7 @@ struct node *head = NULL;
 struct node *tail = NULL;
 
 void add(char *name, int priority, int burst) {
-  Task *newTask = (Task *) malloc(sizeof(Task *));
+  Task *newTask = (Task *) malloc(sizeof(Task));
 
   newTask->name = name;
   newTask->tid = 101;
