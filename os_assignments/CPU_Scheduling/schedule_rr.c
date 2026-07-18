@@ -25,7 +25,6 @@ void add(char *name, int priority, int burst) {
 }
 
 void schedule() {
-  double avgWait = 0;
   double avgTurn = 0;
   double avgRsp = 0;
   int totalElapsedTime = 0;
@@ -42,11 +41,11 @@ void schedule() {
       burstTime = temp->task->burst;
     }
 
-    avgWait += totalElapsedTime;
-    avgTurn += totalElapsedTime;
     totalElapsedTime += burstTime;
 
-    if (howManyruns <= totalTasks) {
+    //No equal sign, because we don't want to add the burst of the last task, since response looks at when the task 
+    //got executed, not how long it got to execute
+    if (howManyruns < totalTasks) {
       avgRsp += totalElapsedTime;
     }
 
@@ -61,14 +60,24 @@ void schedule() {
       tempTask->priority = temp->task->priority;
       tempTask->burst = temp->task->burst - burstTime;
       insert(&head, &tail, tempTask);
+
+      //Now delete the original
+      delete(&head, temp->task);      
+    
+      //else statement just so we can count avgTurn
+    } else {
+
+      //We only count Average turn around time when the task is completed
+      avgTurn += totalElapsedTime;
+
+      //Now delete the completed task
+      delete(&head, temp->task);
+      
     }
     
-
-    //Now delete the original
-    delete(&head, temp->task);
   }
 
-  printf("\nAverage waiting time = %.2lf\n", avgWait / howManyruns);
-  printf("Average turnaround time = %.2lf\n", avgTurn / howManyruns);
+  printf("\nAverage waiting time = %.2lf\n", (avgTurn - totalElapsedTime) / totalTasks);
+  printf("Average turnaround time = %.2lf\n", avgTurn / totalTasks);
   printf("Average response time = %.2lf\n", avgRsp / totalTasks);
 }
