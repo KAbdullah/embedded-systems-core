@@ -38,6 +38,9 @@ priority_rr: driver.o list.o CPU.o schedule_priority_rr.o
 driver.o: driver.c
 	$(CC) $(CFLAGS) -c driver.c
 
+schedule_priority_rr.o: schedule_priority_rr.c
+	$(CC) $(CFLAGS) -c schedule_priority_rr.c
+
 schedule_sjf.o: schedule_sjf.c
 	$(CC) $(CFLAGS) -c schedule_sjf.c
 
