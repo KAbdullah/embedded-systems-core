@@ -18,7 +18,7 @@ void insert(struct node **head, struct node **tail, Task *newTask) {
     newNode->task = newTask;
     newNode->next = NULL;
     //Can't do **head, because head points to NULL, and NULL can't store a value aka you can't dereference it
-    if (*tail == *head && *head == NULL) {
+    if (*head == NULL) {
         *head = newNode;
         *tail = newNode;
     } else {
