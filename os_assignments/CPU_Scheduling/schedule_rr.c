@@ -54,7 +54,7 @@ void schedule() {
 
     //Now create a temporary Task of the original with reduced Burst time only if burst > 0
     if (temp->task->burst - burstTime > 0) {
-      Task *tempTask = (Task *) malloc(sizeof(Task *));
+      Task *tempTask = (Task *) malloc(sizeof(Task));
       tempTask->name = temp->task->name;
       tempTask->tid = temp->task->tid;
       tempTask->priority = temp->task->priority;

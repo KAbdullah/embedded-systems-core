@@ -27,7 +27,6 @@ void schedule() {
 
   while(head) {
     struct node *temp = head;
-    int samePriority = 0;
     int highestPriority = 0;
     struct node *queuehead = NULL;
     struct node *queuetail = NULL;
@@ -35,44 +34,48 @@ void schedule() {
     //This while loop basically selects tasks with next highest Priority
     while (temp) {
       if (temp->task->priority > highestPriority) {
-        while (samePriority) {
-          delete(&queuehead, queuehead->task);
-          samePriority--;
-        }
-        //Don't want the queuetail pointer to stay dangling, so reset it here, for 100% safety
-        queuehead = NULL;
-        queuetail = NULL;
-
-        samePriority = 1;
         highestPriority = temp->task->priority;
-        insert(&queuehead, &queuetail, temp->task);
-      } else if (temp->task->priority == highestPriority) {
-        samePriority++;
-        insert(&queuehead, &queuetail, temp->task);
       }
       temp = temp->next;
     }
 
-    while (queuehead) {
-      int burstTime = 0;
-      if (queuehead->task->burst < QUANTUM) {
-        burstTime = queuehead->task->burst;
-      } else {
-        burstTime = QUANTUM;
+    temp = head;
+    while (temp) {
+      struct node *nextTemp = temp->next;
+      if (temp->task->priority == highestPriority) {
+        Task *queueheadTask = (Task *) malloc(sizeof(Task));
+
+        queueheadTask->name = temp->task->name;
+        queueheadTask->tid = temp->task->tid;
+        queueheadTask->priority = temp->task->priority;
+        queueheadTask->burst = temp->task->burst;
+
+        insert(&queuehead, &queuetail, queueheadTask);
+        delete(&head, temp->task);
       }
+      temp = nextTemp;
+    }
 
-      run(queuehead->task, queuehead->task->burst);
+    while (queuehead) {
+      int burstTime = (queuehead->task->burst < QUANTUM) ? queuehead->task->burst : QUANTUM;
 
-      if (queuehead->task->burst - burstTime > 0) {
-        Task *tempTask = malloc(sizeof(Task));
+      run(queuehead->task, burstTime);
+
+      queuehead->task->burst -= burstTime;
+
+      if (queuehead->task->burst > 0) {
+        Task *tempTask = (Task *) malloc(sizeof(Task));
         tempTask->name = queuehead->task->name;
         tempTask->tid = queuehead->task->tid;
         tempTask->priority = queuehead->task->priority;
-        tempTask->burst = queuehead->task->burst - burstTime;
+        tempTask->burst = queuehead->task->burst;
         insert(&queuehead, &queuetail, tempTask);
+
         delete(&queuehead, queuehead->task);
       } else {
+
         delete(&queuehead, queuehead->task);
+
       }
 
     }
