@@ -365,7 +365,7 @@ int main() {
   } Variant;
 
   //This basically overalys the struct data underneath the attribute value of union type
-  typedef union {
+  typedef union memory {
     uint32_t value;
     struct {
       uint8_t firstByte;
